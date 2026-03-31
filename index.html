@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2065 Capital</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: 16px;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* BACKGROUND */
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(26,58,143,0.045) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(26,58,143,0.045) 80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header, main, footer { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header { padding: 28px 48px 0; }
+
+  /* LOGO */
+  .logo-box {
+    border: 2.5px solid #1a3a8f;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 6px 10px 8px 10px;
+    width: 76px;
+    height: 96px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+  .logo-box .logo-year {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a3a8f;
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.25;
+  }
+  .logo-box .logo-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a3a8f;
+    letter-spacing: 0.5px;
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.25;
+  }
+
+  nav { border-top: 1px solid #ccc; padding: 12px 0; }
+  nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+  nav ul li { display: flex; align-items: center; }
+  nav ul li a {
+    text-decoration: none;
+    color: #1a1a2e;
+    font-size: 13.5px;
+    padding: 0 16px;
+    transition: color 0.2s;
+  }
+  nav ul li a:hover { color: #1a3a8f; }
+  nav ul li a.active { color: #1a3a8f; text-decoration: underline; }
+  nav ul li:not(:last-child)::after { content: "|"; color: #bbb; font-size: 12px; }
+
+  /* PAGES */
+  main { padding: 0 48px; }
+  .page { display: none; padding: 56px 0 80px; max-width: 900px; }
+  .page.active { display: block; }
+
+  /* ── HOME ── */
+  #home {
+    min-height: 60vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+  }
+  #home.active { display: flex; }
+
+  .tagline-wheel { position: relative; min-height: 90px; max-width: 700px; width: 100%; }
+  .tagline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    font-size: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #1a1a2e;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+    text-align: center;
+  }
+  .tagline.visible { opacity: 1; }
+
+  /* ── ABOUT ── */
+  #about p {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #222;
+    max-width: 740px;
+  }
+
+  /* ── STRATEGIES ── */
+  .strategy-list { max-width: 560px; }
+  .strategy-item {
+    border-bottom: 1px solid #ddd;
+  }
+  .strategy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .strategy-header h3 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a2e;
+    text-decoration: underline;
+  }
+  .strategy-header:hover h3 { color: #1a3a8f; }
+  .strategy-toggle {
+    font-size: 20px;
+    color: #888;
+    line-height: 1;
+    transition: transform 0.3s;
+  }
+  .strategy-toggle.open { transform: rotate(45deg); }
+  .strategy-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+    padding: 0 4px;
+  }
+  .strategy-body.open {
+    max-height: 300px;
+    padding-bottom: 18px;
+  }
+
+  /* ── TEAM ── */
+  .team-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .featured-person { text-align: center; margin-bottom: 44px; }
+  .person-photo-lg {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: #dde3ee;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #999;
+    border: 1px solid #c5cfe0;
+  }
+  .featured-person h3 { font-size: 15px; font-weight: bold; color: #1a1a2e; }
+  .featured-person p { font-size: 13px; color: #666; margin-top: 2px; }
+
+  .people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 80px; }
+  .person-card { display: flex; align-items: center; gap: 14px; }
+  .person-photo-sm {
+    width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+    background: #dde3ee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #aaa;
+    border: 1px solid #c5cfe0;
+  }
+  .person-info h3 { font-size: 14px; font-weight: bold; color: #1a1a2e; margin-bottom: 2px; }
+  .person-info p { font-size: 13px; color: #666; }
+
+  /* ── BOARD ── */
+  .board-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 80px; }
+
+  /* ── CONTACT ── */
+  .contact-block { margin-bottom: 28px; }
+  .contact-block h3 { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.2px; color: #999; margin-bottom: 7px; }
+  .contact-block p, .contact-block a { font-size: 15px; color: #1a1a2e; text-decoration: none; display: block; line-height: 1.7; }
+  .contact-block a:hover { color: #1a3a8f; text-decoration: underline; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid #ddd; padding: 18px 48px; font-size: 12px; color: #aaa; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<div class="bg-overlay"></div>
+
+<header>
+  <div class="logo-box" onclick="showPage('home', document.querySelector('nav a'))">
+    <span class="logo-year">2065</span>
+    <span class="logo-name">CAPITAL</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#" class="active" onclick="showPage('home',this);return false;">Home</a></li>
+      <li><a href="#" onclick="showPage('about',this);return false;">About Us</a></li>
+      <li><a href="#" onclick="showPage('strategies',this);return false;">Strategies</a></li>
+      <li><a href="#" onclick="showPage('team',this);return false;">Team</a></li>
+      <li><a href="#" onclick="showPage('board',this);return false;">Board of Directors</a></li>
+      <li><a href="#" onclick="showPage('contact',this);return false;">Contact Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div id="home" class="page active">
+    <div class="tagline-wheel">
+      <div class="tagline visible" id="t0">Long duration capital for complex structures.</div>
+      <div class="tagline" id="t1">We go where conventional debt and equity cannot.</div>
+      <div class="tagline" id="t2">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
+      <div class="tagline" id="t3">Alignment and mutual trust support durable results in complex structures.</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="about" class="page">
+    <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
+  </div>
+
+  <!-- STRATEGIES -->
+  <div id="strategies" class="page">
+    <div class="strategy-list">
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Preferred Equity</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Insurance Strategies</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Leveraged Vehicles</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="team" class="page">
+    <div class="team-wrapper">
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Jason Sussman</h3><p>Founder and CEO</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Nick Peluchiwski</h3><p>Associate</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Heather Ryan</h3><p>Chief of Staff</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Jay Metzger</h3><p>Analyst</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div id="board" class="page">
+    <div class="board-wrapper">
+      <div class="board-grid">
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" class="page">
+    <div class="contact-block">
+      <h3>Email</h3>
+      <a href="mailto:info@2065capital.com">info@2065capital.com</a>
+    </div>
+    <div class="contact-block">
+      <h3>Phone</h3>
+      <p>+1 (000) 000-0000</p>
+    </div>
+    <div class="contact-block">
+      <h3>Office</h3>
+      <p>Chicago, IL</p>
+    </div>
+    <div class="contact-block">
+      <h3>LinkedIn</h3>
+      <a href="#">2065 Capital Management</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2025 2065 Capital Management. All Rights Reserved.
+</footer>
+
+<script>
+  // Page switching
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  // Tagline rotator
+  const taglines = document.querySelectorAll('.tagline');
+  let cur = 0;
+  function rotateTags() {
+    taglines[cur].classList.remove('visible');
+    cur = (cur + 1) % taglines.length;
+    taglines[cur].classList.add('visible');
+  }
+  setInterval(rotateTags, 3200);
+
+  // Strategy accordion
+  function toggleStrategy(header) {
+    const body = header.nextElementSibling;
+    const toggle = header.querySelector('.strategy-toggle');
+    const isOpen = body.classList.contains('open');
+    // close all
+    document.querySelectorAll('.strategy-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.strategy-toggle').forEach(t => t.classList.remove('open'));
+    if (!isOpen) {
+      body.classList.add('open');
+      toggle.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>

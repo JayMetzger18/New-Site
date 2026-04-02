@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2065 Capital</title>
+<!-- Save this file as index.html -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: 16px;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* BACKGROUND */
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .bg-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0.13;
+  }
+
+  header, main, footer { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header { padding: 28px 48px 0; }
+
+  /* LOGO */
+  .logo-box {
+    display: inline-block;
+    width: 68px;
+    height: 92px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .logo-box img { width: 100%; height: 100%; display: block; object-fit: contain; }
+
+  nav { border-top: 1px solid #ccc; padding: 12px 0; }
+  nav ul { list-style: none; display: flex; flex-wrap: wrap; }
+  nav ul li { display: flex; align-items: center; }
+  nav ul li a {
+    text-decoration: none;
+    color: #1a1a2e;
+    font-size: 13.5px;
+    padding: 0 16px;
+    transition: color 0.2s;
+  }
+  nav ul li a:hover { color: #1a3a8f; }
+  nav ul li a.active { color: #1a3a8f; text-decoration: underline; }
+  nav ul li:not(:last-child)::after { content: "|"; color: #bbb; font-size: 12px; }
+
+  /* PAGES */
+  main { padding: 0 48px; }
+  .page { display: none; padding: 56px 0 80px; max-width: 900px; }
+  .page.active { display: block; }
+
+  /* ── HOME ── */
+  #home {
+    min-height: 60vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+  }
+  #home.active { display: flex; }
+
+  .tagline-wheel { position: relative; min-height: 90px; max-width: 700px; width: 100%; }
+  .tagline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    font-size: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #1a1a2e;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+    text-align: center;
+  }
+  .tagline.visible { opacity: 1; }
+
+  /* ── ABOUT ── */
+  #about p {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #222;
+    max-width: 740px;
+  }
+
+  /* ── STRATEGIES ── */
+  .strategy-list { max-width: 560px; }
+  .strategy-item {
+    border-bottom: 1px solid #ddd;
+  }
+  .strategy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .strategy-header h3 {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a2e;
+    text-decoration: underline;
+  }
+  .strategy-header:hover h3 { color: #1a3a8f; }
+  .strategy-toggle {
+    font-size: 20px;
+    color: #888;
+    line-height: 1;
+    transition: transform 0.3s;
+  }
+  .strategy-toggle.open { transform: rotate(45deg); }
+  .strategy-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+    padding: 0 4px;
+  }
+  .strategy-body.open {
+    max-height: 300px;
+    padding-bottom: 18px;
+  }
+
+  /* ── TEAM ── */
+  .team-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .featured-person { text-align: center; margin-bottom: 44px; }
+  .person-photo-lg {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: #dde3ee;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #999;
+    border: 1px solid #c5cfe0;
+  }
+  .featured-person h3 { font-size: 15px; font-weight: bold; color: #1a1a2e; }
+  .featured-person p { font-size: 13px; color: #666; margin-top: 2px; }
+
+  .people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 80px; }
+  .person-card { display: flex; align-items: center; gap: 14px; }
+  .person-photo-sm {
+    width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+    background: #dde3ee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #aaa;
+    border: 1px solid #c5cfe0;
+  }
+  .person-info h3 { font-size: 14px; font-weight: bold; color: #1a1a2e; margin-bottom: 2px; }
+  .person-info p { font-size: 13px; color: #666; }
+
+  /* ── BOARD ── */
+  .board-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 80px; }
+
+  /* ── CONTACT ── */
+  .contact-block { margin-bottom: 28px; }
+  .contact-block h3 { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.2px; color: #999; margin-bottom: 7px; }
+  .contact-block p, .contact-block a { font-size: 15px; color: #1a1a2e; text-decoration: none; display: block; line-height: 1.7; }
+  .contact-block a:hover { color: #1a3a8f; text-decoration: underline; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid #ddd; padding: 18px 48px; font-size: 12px; color: #aaa; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<div class="bg-overlay">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8cce8"/>
+      <stop offset="100%" stop-color="#e8eff8"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9ab5d4"/>
+      <stop offset="100%" stop-color="#c8d8ea"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#sky)"/>
+  <!-- Lake Michigan -->
+  <rect x="0" y="720" width="1440" height="180" fill="url(#water)" opacity="0.5"/>
+
+  <!-- === CHICAGO SKYLINE === -->
+  <!-- Far background buildings (lighter) -->
+  <rect x="0" y="580" width="60" height="140" fill="#4a6fa5" opacity="0.3"/>
+  <rect x="55" y="560" width="45" height="160" fill="#4a6fa5" opacity="0.3"/>
+  <rect x="95" y="590" width="50" height="130" fill="#4a6fa5" opacity="0.3"/>
+  <rect x="1300" y="570" width="55" height="150" fill="#4a6fa5" opacity="0.3"/>
+  <rect x="1350" y="590" width="50" height="130" fill="#4a6fa5" opacity="0.3"/>
+  <rect x="1395" y="610" width="45" height="110" fill="#4a6fa5" opacity="0.3"/>
+
+  <!-- === MAIN SKYLINE (left to right) === -->
+
+  <!-- Far left low-rise cluster -->
+  <rect x="30" y="640" width="40" height="80" fill="#2d4f82"/>
+  <rect x="65" y="625" width="35" height="95" fill="#2d4f82"/>
+  <rect x="95" y="650" width="30" height="70" fill="#2d4f82"/>
+
+  <!-- Mid-left cluster -->
+  <rect x="140" y="610" width="50" height="110" fill="#2d4f82"/>
+  <rect x="185" y="595" width="40" height="125" fill="#2d4f82"/>
+  <rect x="220" y="620" width="45" height="100" fill="#2d4f82"/>
+
+  <!-- 333 W Wacker-ish curved tower -->
+  <rect x="270" y="510" width="55" height="210" fill="#1a3a8f"/>
+  <rect x="268" y="505" width="59" height="12" fill="#1a3a8f"/>
+  <rect x="272" y="495" width="51" height="12" fill="#1a3a8f"/>
+  <!-- windows -->
+  <rect x="276" y="520" width="8" height="6" fill="#c8d8f0" opacity="0.6"/>
+  <rect x="290" y="520" width="8" height="6" fill="#c8d8f0" opacity="0.6"/>
+  <rect x="304" y="520" width="8" height="6" fill="#c8d8f0" opacity="0.6"/>
+  <rect x="276" y="535" width="8" height="6" fill="#c8d8f0" opacity="0.4"/>
+  <rect x="290" y="535" width="8" height="6" fill="#c8d8f0" opacity="0.6"/>
+  <rect x="304" y="535" width="8" height="6" fill="#c8d8f0" opacity="0.4"/>
+
+  <!-- Mid buildings -->
+  <rect x="330" y="560" width="45" height="160" fill="#2d4f82"/>
+  <rect x="370" y="540" width="38" height="180" fill="#253d6e"/>
+  <rect x="402" y="570" width="42" height="150" fill="#2d4f82"/>
+
+  <!-- Aon Center-ish (tall white tower) -->
+  <rect x="448" y="430" width="62" height="290" fill="#1a3a8f"/>
+  <rect x="446" y="425" width="66" height="10" fill="#1a3a8f"/>
+  <rect x="450" y="415" width="58" height="12" fill="#1a3a8f"/>
+  <rect x="454" y="408" width="50" height="9" fill="#1a3a8f"/>
+  <!-- Aon windows grid -->
+  <rect x="455" y="440" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="468" y="440" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="481" y="440" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="494" y="440" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="455" y="455" width="7" height="5" fill="#c8d8f0" opacity="0.3"/>
+  <rect x="468" y="455" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="481" y="455" width="7" height="5" fill="#c8d8f0" opacity="0.3"/>
+  <rect x="494" y="455" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="455" y="470" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="468" y="470" width="7" height="5" fill="#c8d8f0" opacity="0.3"/>
+  <rect x="481" y="470" width="7" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="494" y="470" width="7" height="5" fill="#c8d8f0" opacity="0.3"/>
+
+  <!-- Mid connectors -->
+  <rect x="515" y="570" width="45" height="150" fill="#2d4f82"/>
+  <rect x="554" y="545" width="50" height="175" fill="#253d6e"/>
+  <rect x="598" y="580" width="38" height="140" fill="#2d4f82"/>
+
+  <!-- Willis/Sears Tower (centerpiece) -->
+  <rect x="640" y="340" width="30" height="380" fill="#1a3a8f"/>
+  <rect x="670" y="390" width="28" height="330" fill="#1a3a8f"/>
+  <rect x="636" y="335" width="66" height="12" fill="#152e70"/>
+  <!-- Antennae -->
+  <rect x="648" y="260" width="4" height="80" fill="#1a3a8f"/>
+  <rect x="672" y="275" width="4" height="65" fill="#1a3a8f"/>
+  <!-- Sears setbacks -->
+  <rect x="640" y="480" width="58" height="5" fill="#152e70"/>
+  <rect x="640" y="560" width="58" height="5" fill="#152e70"/>
+  <!-- Sears windows -->
+  <rect x="646" y="355" width="6" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="657" y="355" width="6" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="668" y="355" width="6" height="5" fill="#c8d8f0" opacity="0.3"/>
+  <rect x="646" y="368" width="6" height="5" fill="#c8d8f0" opacity="0.3"/>
+  <rect x="657" y="368" width="6" height="5" fill="#c8d8f0" opacity="0.5"/>
+  <rect x="668" y="368" width="6" height="5" fill="#c8d8f0" opacity="0.5"/>
+
+  <!-- Right of Willis cluster -->
+  <rect x="703" y="490" width="48" height="230" fill="#253d6e"/>
+  <rect x="745" y="520" width="42" height="200" fill="#2d4f82"/>
+  <rect x="781" y="500" width="50" height="220" fill="#1a3a8f"/>
+  <!-- small spire -->
+  <rect x="801" y="478" width="10" height="24" fill="#1a3a8f"/>
+  <rect x="804" y="460" width="4" height="20" fill="#1a3a8f"/>
+
+  <!-- 875 N Michigan (John Hancock) -->
+  <rect x="835" y="380" width="52" height="340" fill="#1a3a8f"/>
+  <!-- Hancock X-bracing -->
+  <line x1="835" y1="380" x2="887" y2="720" stroke="#c8d8f0" stroke-width="2" opacity="0.2"/>
+  <line x1="887" y1="380" x2="835" y2="720" stroke="#c8d8f0" stroke-width="2" opacity="0.2"/>
+  <!-- Hancock antennae -->
+  <rect x="846" y="320" width="4" height="62" fill="#1a3a8f"/>
+  <rect x="874" y="328" width="4" height="54" fill="#1a3a8f"/>
+  <!-- Hancock setbacks -->
+  <rect x="835" y="490" width="52" height="5" fill="#152e70"/>
+  <rect x="835" y="600" width="52" height="5" fill="#152e70"/>
+
+  <!-- Right cluster -->
+  <rect x="895" y="530" width="44" height="190" fill="#253d6e"/>
+  <rect x="933" y="555" width="38" height="165" fill="#2d4f82"/>
+  <rect x="966" y="510" width="55" height="210" fill="#1a3a8f"/>
+  <rect x="964" y="505" width="59" height="8" fill="#152e70"/>
+  <rect x="968" y="497" width="51" height="10" fill="#152e70"/>
+
+  <!-- Far right cluster -->
+  <rect x="1025" y="570" width="40" height="150" fill="#2d4f82"/>
+  <rect x="1059" y="545" width="45" height="175" fill="#253d6e"/>
+  <rect x="1098" y="590" width="38" height="130" fill="#2d4f82"/>
+  <rect x="1130" y="610" width="42" height="110" fill="#2d4f82"/>
+  <rect x="1166" y="580" width="50" height="140" fill="#253d6e"/>
+  <rect x="1210" y="620" width="36" height="100" fill="#2d4f82"/>
+  <rect x="1240" y="640" width="40" height="80" fill="#2d4f82"/>
+  <rect x="1274" y="625" width="35" height="95" fill="#2d4f82"/>
+  <rect x="1305" y="650" width="45" height="70" fill="#2d4f82"/>
+  <rect x="1345" y="635" width="40" height="85" fill="#253d6e"/>
+  <rect x="1380" y="655" width="60" height="65" fill="#2d4f82"/>
+
+  <!-- Ground / base line -->
+  <rect x="0" y="718" width="1440" height="6" fill="#1a3a8f" opacity="0.3"/>
+
+  <!-- Water reflections -->
+  <rect x="440" y="730" width="62" height="4" fill="#1a3a8f" opacity="0.15"/>
+  <rect x="636" y="738" width="66" height="3" fill="#1a3a8f" opacity="0.12"/>
+  <rect x="835" y="732" width="52" height="4" fill="#1a3a8f" opacity="0.15"/>
+</svg>
+</div>
+
+<header>
+  <div class="logo-box" onclick="showPage('home', document.querySelector('nav a'))">
+    <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#" class="active" onclick="showPage('home',this);return false;">Home</a></li>
+      <li><a href="#" onclick="showPage('about',this);return false;">About Us</a></li>
+      <li><a href="#" onclick="showPage('strategies',this);return false;">Strategies</a></li>
+      <li><a href="#" onclick="showPage('team',this);return false;">Team</a></li>
+      <li><a href="#" onclick="showPage('board',this);return false;">Board of Directors</a></li>
+      <li><a href="#" onclick="showPage('contact',this);return false;">Contact Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <div id="home" class="page active">
+    <div class="tagline-wheel">
+      <div class="tagline visible" id="t0">We go where conventional debt and equity cannot.</div>
+      <div class="tagline" id="t1">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
+      <div class="tagline" id="t2">Alignment and mutual trust support durable results in complex structures.</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="about" class="page">
+    <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
+  </div>
+
+  <!-- STRATEGIES -->
+  <div id="strategies" class="page">
+    <div class="strategy-list">
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Preferred Equity</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Insurance Strategies</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+      <div class="strategy-item">
+        <div class="strategy-header" onclick="toggleStrategy(this)">
+          <h3>Leveraged Vehicles</h3>
+          <span class="strategy-toggle">+</span>
+        </div>
+        <div class="strategy-body">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="team" class="page">
+    <div class="team-wrapper">
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Jason Sussman</h3><p>Founder and CEO</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Nick Peluchiwski</h3><p>Associate</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Heather Ryan</h3><p>Chief of Staff</p></div>
+        </div>
+        <div class="person-card">
+          <div class="person-photo-sm">Photo</div>
+          <div class="person-info"><h3>Jay Metzger</h3><p>Analyst</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div id="board" class="page">
+    <div class="board-wrapper">
+      <div class="board-grid">
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" class="page">
+    <div class="contact-block">
+      <h3>Email</h3>
+      <a href="mailto:info@2065capital.com">info@2065capital.com</a>
+    </div>
+    <div class="contact-block">
+      <h3>Phone</h3>
+      <p>+1 (000) 000-0000</p>
+    </div>
+    <div class="contact-block">
+      <h3>Office</h3>
+      <p>Chicago, IL</p>
+    </div>
+    <div class="contact-block">
+      <h3>LinkedIn</h3>
+      <a href="#">2065 Capital Management</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2025 2065 Capital Management. All Rights Reserved.
+</footer>
+
+<script>
+  // Page switching
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  // Tagline rotator
+  const taglines = document.querySelectorAll('.tagline');
+  let cur = 0;
+  function rotateTags() {
+    taglines[cur].classList.remove('visible');
+    cur = (cur + 1) % taglines.length;
+    taglines[cur].classList.add('visible');
+  }
+  setInterval(rotateTags, 3200);
+
+  // Strategy accordion
+  function toggleStrategy(header) {
+    const body = header.nextElementSibling;
+    const toggle = header.querySelector('.strategy-toggle');
+    const isOpen = body.classList.contains('open');
+    // close all
+    document.querySelectorAll('.strategy-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.strategy-toggle').forEach(t => t.classList.remove('open'));
+    if (!isOpen) {
+      body.classList.add('open');
+      toggle.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>

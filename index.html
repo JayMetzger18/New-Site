@@ -4,310 +4,403 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2065 Capital</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
 
-body {
-  font-family:'DM Sans',sans-serif;
-  background:#ffffff;
-  color:#0d1428;
-  min-height:100vh;
+:root{
+  --navy:#0c1f4a;
+  --blue:#1a3a8f;
+  --mid:rgba(26,58,143,0.45);
+  --faint:rgba(26,58,143,0.06);
+  --line:rgba(26,58,143,0.1);
+  --ink:#0c1424;
+  --muted:#6b7a99;
+  --bg:#ffffff;
+  --sans:'Inter',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
   display:flex;
   flex-direction:column;
+  min-height:100vh;
   overflow-x:hidden;
 }
 
-/* ── BACKGROUND ── */
-.bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
-.bg-tranches { position:absolute; inset:0; }
-.bg-tranches::before {
-  content:'';
-  position:absolute; inset:0;
-  background:
-    linear-gradient(to bottom,
-      transparent calc(16.666% - 0.5px), rgba(26,58,143,0.06) calc(16.666% - 0.5px), rgba(26,58,143,0.06) 16.666%, transparent 16.666%,
-      transparent calc(33.333% - 0.5px), rgba(26,58,143,0.05) calc(33.333% - 0.5px), rgba(26,58,143,0.05) 33.333%, transparent 33.333%,
-      transparent calc(50% - 0.5px), rgba(26,58,143,0.045) calc(50% - 0.5px), rgba(26,58,143,0.045) 50%, transparent 50%,
-      transparent calc(66.666% - 0.5px), rgba(26,58,143,0.05) calc(66.666% - 0.5px), rgba(26,58,143,0.05) 66.666%, transparent 66.666%,
-      transparent calc(83.333% - 0.5px), rgba(26,58,143,0.06) calc(83.333% - 0.5px), rgba(26,58,143,0.06) 83.333%, transparent 83.333%);
+/* ══ BACKGROUND ══ */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+
+/* Single thin vertical rule — left margin */
+.bg-rule{
+  position:absolute;
+  top:0;left:88px;
+  width:1px;height:100%;
+  background:linear-gradient(to bottom,
+    transparent 0%,
+    var(--line) 15%,
+    var(--line) 85%,
+    transparent 100%);
 }
-.bg-tranches::after {
-  content:'';
-  position:absolute; inset:0;
-  background:
-    linear-gradient(to right,
-      transparent calc(20% - 0.5px), rgba(26,58,143,0.04) calc(20% - 0.5px), rgba(26,58,143,0.04) 20%, transparent 20%,
-      transparent calc(40% - 0.5px), rgba(26,58,143,0.035) calc(40% - 0.5px), rgba(26,58,143,0.035) 40%, transparent 40%,
-      transparent calc(60% - 0.5px), rgba(26,58,143,0.035) calc(60% - 0.5px), rgba(26,58,143,0.035) 60%, transparent 60%,
-      transparent calc(80% - 0.5px), rgba(26,58,143,0.04) calc(80% - 0.5px), rgba(26,58,143,0.04) 80%, transparent 80%);
+
+/* Horizontal hairlines — very sparse */
+.bg-h1{position:absolute;top:0;left:0;right:0;height:1px;background:var(--line);}
+.bg-h2{
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:var(--line);
 }
-.bg-bracket-tl { position:absolute; top:24px; left:24px; width:48px; height:48px; border-top:1.5px solid rgba(26,58,143,0.18); border-left:1.5px solid rgba(26,58,143,0.18); }
-.bg-bracket-br { position:absolute; bottom:24px; right:24px; width:48px; height:48px; border-bottom:1.5px solid rgba(26,58,143,0.18); border-right:1.5px solid rgba(26,58,143,0.18); }
-.bg-node { position:absolute; width:4px; height:4px; border-radius:50%; background:rgba(26,58,143,0.15); }
 
-/* ── HEADER ── */
-header { position:relative; z-index:10; padding:24px 32px 0; }
+/* Large faint number watermark */
+.bg-year{
+  position:absolute;
+  right:-40px;bottom:-80px;
+  font-family:var(--sans);
+  font-size:380px;
+  font-weight:600;
+  color:rgba(26,58,143,0.028);
+  letter-spacing:-20px;
+  line-height:1;
+  user-select:none;
+  pointer-events:none;
+}
 
-.header-top { display:flex; justify-content:space-between; align-items:flex-start; }
+/* ══ HEADER ══ */
+header{
+  position:relative;z-index:10;
+  padding:32px 56px 0 56px;
+}
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--line);
+}
+.logo-box{width:78px;height:105px;cursor:pointer;flex-shrink:0;}
+.logo-box img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
 
-.logo-box { width:80px; height:108px; cursor:pointer; display:inline-block; flex-shrink:0; }
-.logo-box img { width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+/* Site name beside logo */
+.site-name{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:3.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding-bottom:4px;
+}
+
+/* ══ NAV ══ */
+nav{padding:0;}
+nav ul{
+  list-style:none;
+  display:flex;
+  width:100%;
+  border-bottom:1px solid var(--line);
+}
+nav ul li{flex:1;display:flex;align-items:center;justify-content:center;}
+nav ul li a{
+  display:block;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  padding:14px 8px;
+  transition:color 0.2s;
+  white-space:nowrap;
+  position:relative;
+}
+nav ul li a::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:2px;
+  background:var(--blue);
+  transform:scaleX(0);
+  transition:transform 0.25s ease;
+}
+nav ul li a:hover{color:var(--ink);}
+nav ul li a:hover::after{transform:scaleX(1);}
+nav ul li a.active{color:var(--navy);}
+nav ul li a.active::after{transform:scaleX(1);}
 
 /* Hamburger */
-.hamburger {
-  display:none;
-  flex-direction:column;
-  gap:5px;
-  cursor:pointer;
-  padding:8px;
-  margin-top:8px;
-  z-index:20;
-}
-.hamburger span {
-  display:block; width:24px; height:1.5px;
-  background:#0d1428;
-  transition:all 0.3s;
-}
-.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(4.5px,4.5px); }
-.hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(4.5px,-4.5px); }
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;margin-bottom:4px;}
+.hamburger span{display:block;width:22px;height:1px;background:var(--ink);transition:all 0.3s;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px);}
 
-/* ── NAV ── */
-nav { border-top:1px solid rgba(26,58,143,0.14); padding:13px 0; margin-top:24px; }
-nav ul { list-style:none; display:flex; width:100%; }
-nav ul li { flex:1; display:flex; align-items:center; justify-content:center; }
-nav ul li a {
-  text-decoration:none; color:#0d1428;
-  font-size:11px; font-weight:500;
-  letter-spacing:1.8px; text-transform:uppercase;
-  padding:4px 6px; transition:color 0.2s; white-space:nowrap;
-  position:relative;
-}
-nav ul li a:hover { color:#1a3a8f; }
-nav ul li a.active { color:#1a3a8f; }
-nav ul li a.active::before {
-  content:''; position:absolute;
-  left:50%; top:-6px; transform:translateX(-50%);
-  width:4px; height:4px; border-radius:50%;
-  background:#1a3a8f; opacity:0.6;
-}
-nav ul li:not(:last-child) { border-right:1px solid rgba(26,58,143,0.1); }
-
-/* Mobile nav overlay */
-.mobile-nav {
-  display:none;
-  position:fixed; inset:0; z-index:15;
-  background:rgba(255,255,255,0.97);
-  flex-direction:column;
-  align-items:center;
+/* Mobile overlay */
+.mobile-nav{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:#fff;
+  flex-direction:column;align-items:flex-start;
   justify-content:center;
-  gap:36px;
+  padding:0 56px;
+  gap:0;
 }
-.mobile-nav.open { display:flex; }
-.mobile-nav a {
-  text-decoration:none; color:#0d1428;
-  font-size:18px; font-weight:300;
-  letter-spacing:3px; text-transform:uppercase;
-  transition:color 0.2s;
+.mobile-nav.open{display:flex;}
+.mobile-nav a{
+  text-decoration:none;color:var(--ink);
+  font-size:28px;font-weight:300;
+  letter-spacing:1px;
+  padding:18px 0;
+  width:100%;
+  border-bottom:1px solid var(--line);
+  transition:color 0.2s,padding-left 0.2s;
 }
-.mobile-nav a:hover, .mobile-nav a.active { color:#1a3a8f; }
-.mobile-nav-close {
-  position:absolute; top:28px; right:32px;
-  font-size:28px; cursor:pointer;
-  color:#0d1428; font-weight:200;
+.mobile-nav a:first-of-type{border-top:1px solid var(--line);}
+.mobile-nav a:hover,.mobile-nav a.active{color:var(--blue);padding-left:12px;}
+.mob-close{
+  position:absolute;top:28px;right:40px;
+  font-size:24px;cursor:pointer;
+  color:var(--muted);font-weight:300;
+}
+
+/* ══ MAIN ══ */
+main{flex:1;position:relative;z-index:1;padding:0;width:100%;}
+.page{display:none;padding:80px 56px 100px;max-width:100%;text-align:center;}
+.page.active{display:block;}
+#home.active{display:flex;}
+
+/* ══ HOME ══ */
+#home{
+  min-height:76vh;
+  display:none;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  padding:80px 56px 80px 180px;
+}
+
+.home-label{
+  font-family:var(--mono);
+  font-size:9px;font-weight:300;
+  letter-spacing:4px;
+  color:var(--mid);
+  text-transform:uppercase;
+  margin-bottom:40px;
+}
+
+.tagline-wheel{
+  position:relative;
+  min-height:200px;
+  max-width:680px;
+  width:100%;
+}
+.tagline{
+  position:absolute;top:0;left:0;
+  font-size:38px;
+  font-weight:200;
+  color:var(--navy);
+  line-height:1.45;
+  opacity:0;
+  transition:opacity 1.2s ease;
+  pointer-events:none;
+  text-align:left;
+  letter-spacing:-0.5px;
+}
+.tagline.visible{opacity:1;}
+
+.home-meta{
+  margin-top:52px;
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.home-counter{
+  font-family:var(--mono);
+  font-size:9px;font-weight:300;
+  letter-spacing:3px;
+  color:var(--mid);
+}
+.home-line{
+  width:48px;height:1px;
+  background:var(--mid);
+}
+.home-year{
+  font-family:var(--mono);
+  font-size:9px;font-weight:300;
+  letter-spacing:3px;
+  color:var(--mid);
+}
+
+/* ══ INNER PAGES ══ */
+.inner{
+  max-width:780px;
+  margin:0 auto;
+}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:9px;font-weight:400;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--mid);
+  margin-bottom:48px;
+}
+
+/* ══ ABOUT ══ */
+#about p{
+  font-size:17px;
+  font-weight:300;
+  line-height:2;
+  color:var(--ink);
+  text-align:left;
+}
+#about .inner{text-align:left;}
+
+/* ══ STRATEGIES ══ */
+.s-list{text-align:left;}
+.s-item{border-top:1px solid var(--line);position:relative;}
+.s-item:last-child{border-bottom:1px solid var(--line);}
+.s-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 0;cursor:pointer;user-select:none;
+  transition:padding-left 0.2s;
+}
+.s-head:hover{padding-left:8px;}
+.s-left{display:flex;align-items:baseline;gap:24px;}
+.s-n{
+  font-family:var(--mono);font-size:9px;font-weight:300;
+  color:var(--mid);letter-spacing:1px;
+}
+.s-head h3{
+  font-size:15px;font-weight:500;
+  color:var(--navy);letter-spacing:0.3px;
+}
+.s-head:hover h3{color:var(--blue);}
+.s-toggle{
+  font-family:var(--mono);font-size:20px;font-weight:200;
+  color:var(--mid);transition:transform 0.35s;flex-shrink:0;
   line-height:1;
 }
+.s-toggle.open{transform:rotate(45deg);}
+.s-body{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s ease,padding 0.2s;
+  font-size:14px;font-weight:300;
+  color:var(--muted);line-height:1.9;
+}
+.s-body.open{max-height:300px;padding-bottom:28px;}
 
-/* ── MAIN ── */
-main { flex:1; position:relative; z-index:1; padding:0 32px; width:100%; }
-.page { display:none; padding:60px 0 80px; max-width:1000px; margin:0 auto; text-align:center; }
-.page.active { display:block; }
-#home.active { display:flex; max-width:100%; }
-
-/* ── HOME ── */
-#home {
-  min-height:70vh; display:none;
-  flex-direction:column; align-items:center; justify-content:center;
-  padding:60px 0; width:100%;
+/* ══ PEOPLE ══ */
+.p-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:60px 80px;
+  text-align:left;
 }
-.tagline-wheel { position:relative; min-height:150px; max-width:780px; width:100%; }
-.tagline {
-  position:absolute; top:0; left:0; right:0;
-  font-size:26px; font-weight:200; color:#0d1428;
-  line-height:1.65; opacity:0;
-  transition:opacity 1s ease;
-  pointer-events:none; text-align:center; letter-spacing:0.5px;
+.p-card{display:flex;flex-direction:column;gap:16px;}
+.p-img{
+  width:80px;height:80px;border-radius:2px;
+  background:linear-gradient(160deg,#e8eef7,#d2ddef);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:8px;
+  color:var(--mid);letter-spacing:1px;
 }
-.tagline.visible { opacity:1; }
-.tagline-counter {
-  margin-top:32px;
-  font-family:'DM Mono',monospace;
-  font-size:9px; font-weight:300;
-  letter-spacing:3px; color:rgba(26,58,143,0.3); text-align:center;
-}
-
-/* ── PAGE EYEBROW ── */
-.page-eyebrow {
-  font-family:'DM Mono',monospace;
-  font-size:9px; font-weight:400;
-  letter-spacing:3.5px; text-transform:uppercase;
-  color:rgba(26,58,143,0.5); margin-bottom:36px;
-  display:flex; align-items:center; justify-content:center; gap:12px;
-}
-.page-eyebrow::before, .page-eyebrow::after {
-  content:''; width:28px; height:1px; background:rgba(26,58,143,0.25);
+.p-card h3{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:2px;}
+.p-card p{
+  font-family:var(--mono);font-size:8.5px;font-weight:400;
+  color:var(--mid);letter-spacing:2.5px;text-transform:uppercase;
 }
 
-/* ── ABOUT ── */
-#about p { font-size:17px; font-weight:300; line-height:2.05; color:#2a2a3e; max-width:740px; margin:0 auto; }
-
-/* ── STRATEGIES ── */
-.strategy-list { max-width:600px; margin:0 auto; text-align:left; }
-.strategy-item { border-bottom:1px solid rgba(26,58,143,0.09); position:relative; }
-.strategy-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:rgba(26,58,143,0); transition:background 0.3s; }
-.strategy-item:hover::before { background:rgba(26,58,143,0.25); }
-.strategy-header { display:flex; justify-content:space-between; align-items:center; padding:24px 0 24px 16px; cursor:pointer; user-select:none; }
-.strategy-meta { display:flex; align-items:center; gap:16px; }
-.strategy-num { font-family:'DM Mono',monospace; font-size:9px; font-weight:300; color:rgba(26,58,143,0.35); letter-spacing:1px; }
-.strategy-header h3 { font-size:14px; font-weight:500; color:#0d1428; letter-spacing:1.2px; text-transform:uppercase; }
-.strategy-header:hover h3 { color:#1a3a8f; }
-.strategy-icon { width:26px; height:26px; border:1px solid rgba(26,58,143,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; color:#1a3a8f; font-weight:300; transition:transform 0.35s, background 0.2s; flex-shrink:0; }
-.strategy-icon.open { transform:rotate(45deg); background:rgba(26,58,143,0.07); }
-.strategy-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease, padding 0.2s; font-size:13.5px; font-weight:400; color:#556; line-height:1.85; padding:0 0 0 16px; border-left:2px solid rgba(26,58,143,0.12); margin-left:2px; }
-.strategy-body.open { max-height:300px; padding:0 0 24px 16px; }
-
-/* ── TEAM & BOARD ── */
-.team-wrapper, .board-wrapper { display:flex; flex-direction:column; align-items:center; }
-.people-grid { display:grid; grid-template-columns:1fr 1fr; gap:52px 110px; }
-.person-card { display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center; }
-.person-photo-sm {
-  width:76px; height:76px; border-radius:50%;
-  background:linear-gradient(145deg,#eaeff8,#d4deed);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'DM Mono',monospace; font-size:9px; color:#8a9ab8; font-weight:400; letter-spacing:0.5px;
-  position:relative;
+/* ══ CONTACT ══ */
+.c-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:52px 80px;text-align:left;
 }
-.person-photo-sm::after { content:''; position:absolute; inset:-5px; border-radius:50%; border:1px solid rgba(26,58,143,0.12); }
-.person-photo-sm::before { content:''; position:absolute; inset:-10px; border-radius:50%; border:1px dashed rgba(26,58,143,0.07); }
-.person-info h3 { font-size:14px; font-weight:600; color:#0d1428; margin-bottom:5px; letter-spacing:0.3px; }
-.person-info p { font-family:'DM Mono',monospace; font-size:9px; font-weight:400; color:#1a3a8f; letter-spacing:2px; text-transform:uppercase; opacity:0.6; }
-
-/* ── CONTACT ── */
-.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px 80px; max-width:520px; margin:0 auto; text-align:left; }
-.contact-block h3 { font-family:'DM Mono',monospace; font-size:8px; font-weight:400; text-transform:uppercase; letter-spacing:2.5px; color:rgba(26,58,143,0.45); margin-bottom:10px; }
-.contact-block p, .contact-block a { font-size:14px; font-weight:400; color:#0d1428; text-decoration:none; line-height:1.7; display:block; }
-.contact-block a:hover { color:#1a3a8f; }
-
-/* ── FOOTER ── */
-footer { position:relative; z-index:10; border-top:1px solid rgba(26,58,143,0.1); padding:18px 32px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
-.footer-copy { font-family:'DM Mono',monospace; font-size:9px; font-weight:300; color:rgba(26,58,143,0.3); letter-spacing:1px; }
-.footer-logo { width:44px; height:60px; cursor:pointer; }
-.footer-logo img { width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
-
-/* ══════════════════════════════
-   MOBILE RESPONSIVE
-══════════════════════════════ */
-@media (max-width: 768px) {
-  header { padding:20px 20px 0; }
-  main { padding:0 20px; }
-  footer { padding:16px 20px; }
-
-  /* Hide desktop nav, show hamburger */
-  nav { display:none; }
-  .hamburger { display:flex; }
-
-  .logo-box { width:64px; height:86px; }
-
-  /* Home tagline smaller on mobile */
-  .tagline { font-size:20px; line-height:1.6; }
-  .tagline-wheel { min-height:180px; }
-
-  #home { min-height:65vh; padding:40px 0; }
-
-  /* Stack people grid to 1 col on mobile */
-  .people-grid { grid-template-columns:1fr; gap:36px; }
-
-  /* Stack contact grid */
-  .contact-grid { grid-template-columns:1fr; gap:32px; }
-
-  /* About text smaller */
-  #about p { font-size:15px; line-height:1.9; }
-
-  /* Strategy tweaks */
-  .strategy-header { padding:20px 0 20px 12px; }
-  .strategy-header h3 { font-size:12px; letter-spacing:0.8px; }
-
-  /* Footer text truncate */
-  .footer-copy { font-size:8px; letter-spacing:0.5px; }
-
-  .bg-bracket-tl, .bg-bracket-br { width:32px; height:32px; top:12px; left:12px; }
-  .bg-bracket-br { bottom:12px; right:12px; }
+.c-block h3{
+  font-family:var(--mono);font-size:8px;font-weight:400;
+  text-transform:uppercase;letter-spacing:2.5px;
+  color:var(--mid);margin-bottom:12px;
 }
+.c-block p,.c-block a{
+  font-size:15px;font-weight:300;
+  color:var(--navy);text-decoration:none;display:block;
+}
+.c-block a:hover{color:var(--blue);}
 
-@media (max-width: 400px) {
-  .tagline { font-size:17px; }
-  .tagline-wheel { min-height:200px; }
+/* ══ FOOTER ══ */
+footer{
+  position:relative;z-index:10;
+  border-top:1px solid var(--line);
+  padding:20px 56px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+}
+.f-copy{
+  font-family:var(--mono);font-size:9px;font-weight:300;
+  color:rgba(26,58,143,0.28);letter-spacing:1px;
+}
+.f-logo{width:36px;height:48px;cursor:pointer;}
+.f-logo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
+
+/* ══ MOBILE ══ */
+@media(max-width:768px){
+  header{padding:20px 24px 0;}
+  .header-top{padding-bottom:16px;}
+  .logo-box{width:60px;height:81px;}
+  .site-name{display:none;}
+  nav{display:none;}
+  .hamburger{display:flex;}
+  main{padding:0;}
+  .page{padding:60px 24px 80px;}
+  #home{padding:60px 24px;min-height:70vh;align-items:flex-start;}
+  .tagline{font-size:26px;}
+  .tagline-wheel{min-height:220px;}
+  .p-grid{grid-template-columns:1fr;gap:40px;}
+  .c-grid{grid-template-columns:1fr;gap:36px;}
+  #about p{font-size:15px;}
+  footer{padding:16px 24px;}
+  .mobile-nav{padding:0 24px;}
+  .mobile-nav a{font-size:22px;padding:16px 0;}
 }
 </style>
 </head>
 <body>
 
 <div class="bg">
-  <div class="bg-tranches"></div>
-  <div class="bg-bracket-tl"></div>
-  <div class="bg-bracket-br"></div>
-  <div class="bg-node" style="top:16.666%;left:20%"></div>
-  <div class="bg-node" style="top:16.666%;left:40%"></div>
-  <div class="bg-node" style="top:16.666%;left:60%"></div>
-  <div class="bg-node" style="top:16.666%;left:80%"></div>
-  <div class="bg-node" style="top:33.333%;left:20%"></div>
-  <div class="bg-node" style="top:33.333%;left:40%"></div>
-  <div class="bg-node" style="top:33.333%;left:60%"></div>
-  <div class="bg-node" style="top:33.333%;left:80%"></div>
-  <div class="bg-node" style="top:50%;left:20%"></div>
-  <div class="bg-node" style="top:50%;left:40%"></div>
-  <div class="bg-node" style="top:50%;left:60%"></div>
-  <div class="bg-node" style="top:50%;left:80%"></div>
-  <div class="bg-node" style="top:66.666%;left:20%"></div>
-  <div class="bg-node" style="top:66.666%;left:40%"></div>
-  <div class="bg-node" style="top:66.666%;left:60%"></div>
-  <div class="bg-node" style="top:66.666%;left:80%"></div>
-  <div class="bg-node" style="top:83.333%;left:20%"></div>
-  <div class="bg-node" style="top:83.333%;left:40%"></div>
-  <div class="bg-node" style="top:83.333%;left:60%"></div>
-  <div class="bg-node" style="top:83.333%;left:80%"></div>
+  <div class="bg-rule"></div>
+  <div class="bg-h1"></div>
+  <div class="bg-h2"></div>
+  <div class="bg-year">2065</div>
 </div>
 
-<!-- Mobile nav overlay -->
 <div class="mobile-nav" id="mobileNav">
-  <span class="mobile-nav-close" onclick="closeMobileNav()">×</span>
-  <a href="#" onclick="showPage('home',this);closeMobileNav();return false;">Home</a>
-  <a href="#" onclick="showPage('about',this);closeMobileNav();return false;">About Us</a>
-  <a href="#" onclick="showPage('strategies',this);closeMobileNav();return false;">Strategies</a>
-  <a href="#" onclick="showPage('team',this);closeMobileNav();return false;">Team</a>
-  <a href="#" onclick="showPage('board',this);closeMobileNav();return false;">Board of Directors</a>
-  <a href="#" onclick="showPage('contact',this);closeMobileNav();return false;">Contact Us</a>
+  <span class="mob-close" onclick="closeMob()">×</span>
+  <a href="#" onclick="go('home',this);closeMob();return false;">Home</a>
+  <a href="#" onclick="go('about',this);closeMob();return false;">About Us</a>
+  <a href="#" onclick="go('strategies',this);closeMob();return false;">Strategies</a>
+  <a href="#" onclick="go('team',this);closeMob();return false;">Team</a>
+  <a href="#" onclick="go('board',this);closeMob();return false;">Board of Directors</a>
+  <a href="#" onclick="go('contact',this);closeMob();return false;">Contact Us</a>
 </div>
 
 <header>
   <div class="header-top">
-    <div class="logo-box" onclick="showPage('home', document.querySelector('nav a'))">
+    <div class="logo-box" onclick="go('home',document.querySelector('nav a'))">
       <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
     </div>
-    <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+
+    <div class="hamburger" id="ham" onclick="toggleMob()">
       <span></span><span></span><span></span>
     </div>
   </div>
   <nav>
     <ul>
-      <li><a href="#" class="active" onclick="showPage('home',this);return false;">Home</a></li>
-      <li><a href="#" onclick="showPage('about',this);return false;">About Us</a></li>
-      <li><a href="#" onclick="showPage('strategies',this);return false;">Strategies</a></li>
-      <li><a href="#" onclick="showPage('team',this);return false;">Team</a></li>
-      <li><a href="#" onclick="showPage('board',this);return false;">Board of Directors</a></li>
-      <li><a href="#" onclick="showPage('contact',this);return false;">Contact Us</a></li>
+      <li><a href="#" class="active" onclick="go('home',this);return false;">Home</a></li>
+      <li><a href="#" onclick="go('about',this);return false;">About Us</a></li>
+      <li><a href="#" onclick="go('strategies',this);return false;">Strategies</a></li>
+      <li><a href="#" onclick="go('team',this);return false;">Team</a></li>
+      <li><a href="#" onclick="go('board',this);return false;">Board of Directors</a></li>
+      <li><a href="#" onclick="go('contact',this);return false;">Contact Us</a></li>
     </ul>
   </nav>
 </header>
@@ -315,130 +408,133 @@ footer { position:relative; z-index:10; border-top:1px solid rgba(26,58,143,0.1)
 <main>
 
   <div id="home" class="page active">
+    <div class="home-label">Long-Duration Structured Capital Solutions</div>
     <div class="tagline-wheel">
       <div class="tagline visible">We go where conventional debt and equity cannot.</div>
       <div class="tagline">Alignment and mutual trust support durable results in complex structures.</div>
       <div class="tagline">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
     </div>
-    <div class="tagline-counter" id="counter">01 / 03</div>
+    <div class="home-meta">
+      <span class="home-counter" id="ctr">01 / 03</span>
+      <div class="home-line"></div>
+      <span class="home-year">EST. 2025 · CHICAGO</span>
+    </div>
   </div>
 
   <div id="about" class="page">
-    <div class="page-eyebrow">About Us</div>
-    <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
+    <div class="inner">
+      <div class="eyebrow">About Us</div>
+      <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
+    </div>
   </div>
 
   <div id="strategies" class="page">
-    <div class="page-eyebrow">Strategies</div>
-    <div class="strategy-list">
-      <div class="strategy-item">
-        <div class="strategy-header" onclick="toggleStrategy(this)">
-          <div class="strategy-meta"><span class="strategy-num">01</span><h3>Preferred Equity</h3></div>
-          <span class="strategy-icon">+</span>
+    <div class="inner">
+      <div class="eyebrow">Strategies</div>
+      <div class="s-list">
+        <div class="s-item">
+          <div class="s-head" onclick="toggleS(this)">
+            <div class="s-left"><span class="s-n">01</span><h3>Preferred Equity</h3></div>
+            <span class="s-toggle">+</span>
+          </div>
+          <div class="s-body">Businesses where we have high conviction on baseline performance and a significant margin of error in our underwriting due to structure and pricing.</div>
         </div>
-        <div class="strategy-body">Businesses where we have high conviction on baseline performance and a significant margin of error in our underwriting due to structure and pricing.</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-header" onclick="toggleStrategy(this)">
-          <div class="strategy-meta"><span class="strategy-num">02</span><h3>Insurance Strategies</h3></div>
-          <span class="strategy-icon">+</span>
+        <div class="s-item">
+          <div class="s-head" onclick="toggleS(this)">
+            <div class="s-left"><span class="s-n">02</span><h3>Insurance Strategies</h3></div>
+            <span class="s-toggle">+</span>
+          </div>
+          <div class="s-body">High quality credit portfolios with reinsurance float providing cheap long duration financing.</div>
         </div>
-        <div class="strategy-body">High quality credit portfolios with reinsurance float providing cheap long duration financing.</div>
-      </div>
-      <div class="strategy-item">
-        <div class="strategy-header" onclick="toggleStrategy(this)">
-          <div class="strategy-meta"><span class="strategy-num">03</span><h3>Leveraged Vehicles</h3></div>
-          <span class="strategy-icon">+</span>
+        <div class="s-item">
+          <div class="s-head" onclick="toggleS(this)">
+            <div class="s-left"><span class="s-n">03</span><h3>Leveraged Vehicles</h3></div>
+            <span class="s-toggle">+</span>
+          </div>
+          <div class="s-body">High quality underlying credit exposures with attractive sources of cheap long duration leverage.</div>
         </div>
-        <div class="strategy-body">High quality underlying credit exposures with attractive sources of cheap long duration leverage.</div>
       </div>
     </div>
   </div>
 
   <div id="team" class="page">
-    <div class="page-eyebrow">Team</div>
-    <div class="team-wrapper">
-      <div class="people-grid">
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Jason Sussman</h3><p>CEO</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Heather Ryan</h3><p>Chief of Staff</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Nick Peluchiwski</h3><p>Associate</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Jay Metzger</h3><p>Analyst</p></div></div>
+    <div class="inner">
+      <div class="eyebrow">Team</div>
+      <div class="p-grid">
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Jason Sussman</h3><p>CEO</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Heather Ryan</h3><p>Chief of Staff</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Nick Peluchiwski</h3><p>Associate</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Jay Metzger</h3><p>Analyst</p></div></div>
       </div>
     </div>
   </div>
 
   <div id="board" class="page">
-    <div class="page-eyebrow">Board of Directors</div>
-    <div class="board-wrapper">
-      <div class="people-grid">
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
-        <div class="person-card"><div class="person-photo-sm">Photo</div><div class="person-info"><h3>Name</h3><p>Title</p></div></div>
+    <div class="inner">
+      <div class="eyebrow">Board of Directors</div>
+      <div class="p-grid">
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
       </div>
     </div>
   </div>
 
   <div id="contact" class="page">
-    <div class="page-eyebrow">Contact Us</div>
-    <div class="contact-grid">
-      <div class="contact-block"><h3>Email</h3><a href="mailto:info@2065capital.com">info@2065capital.com</a></div>
-      <div class="contact-block"><h3>Phone</h3><p>+1 (000) 000-0000</p></div>
-      <div class="contact-block"><h3>Office</h3><p>Chicago, IL</p></div>
-      <div class="contact-block"><h3>LinkedIn</h3><a href="#">2065 Capital Management</a></div>
+    <div class="inner">
+      <div class="eyebrow">Contact Us</div>
+      <div class="c-grid">
+        <div class="c-block"><h3>Email</h3><a href="mailto:info@2065capital.com">info@2065capital.com</a></div>
+        <div class="c-block"><h3>Phone</h3><p>+1 (000) 000-0000</p></div>
+        <div class="c-block"><h3>Office</h3><p>Chicago, IL</p></div>
+        <div class="c-block"><h3>LinkedIn</h3><a href="#">2065 Capital Management</a></div>
+      </div>
     </div>
   </div>
 
 </main>
 
 <footer>
-  <span class="footer-copy">© 2025 2065 Capital Management — All Rights Reserved</span>
-  <div class="footer-logo" onclick="showPage('home', document.querySelector('nav a'))">
+  <span class="f-copy">© 2025 2065 Capital Management — All Rights Reserved</span>
+  <div class="f-logo" onclick="go('home',document.querySelector('nav a'))">
     <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
   </div>
 </footer>
 
 <script>
-  function showPage(id, el) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav a, .mobile-nav a').forEach(a => a.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (el) el.classList.add('active');
-  }
-
-  const taglines = document.querySelectorAll('.tagline');
-  const counter = document.getElementById('counter');
-  const labels = ['01 / 03','02 / 03','03 / 03'];
-  let cur = 0;
-  function rotateTags() {
-    taglines[cur].classList.remove('visible');
-    cur = (cur + 1) % taglines.length;
-    taglines[cur].classList.add('visible');
-    if (counter) counter.textContent = labels[cur];
-  }
-  setInterval(rotateTags, 3600);
-
-  function toggleStrategy(header) {
-    const body = header.nextElementSibling;
-    const icon = header.querySelector('.strategy-icon');
-    const isOpen = body.classList.contains('open');
-    document.querySelectorAll('.strategy-body').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('.strategy-icon').forEach(i => i.classList.remove('open'));
-    if (!isOpen) { body.classList.add('open'); icon.classList.add('open'); }
-  }
-
-  function toggleMobileNav() {
-    const nav = document.getElementById('mobileNav');
-    const ham = document.getElementById('hamburger');
-    nav.classList.toggle('open');
-    ham.classList.toggle('open');
-  }
-  function closeMobileNav() {
-    document.getElementById('mobileNav').classList.remove('open');
-    document.getElementById('hamburger').classList.remove('open');
-  }
+function go(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav a,.mobile-nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el) el.classList.add('active');
+}
+const tags=document.querySelectorAll('.tagline');
+const ctr=document.getElementById('ctr');
+const lbl=['01 / 03','02 / 03','03 / 03'];
+let c=0;
+setInterval(()=>{
+  tags[c].classList.remove('visible');
+  c=(c+1)%tags.length;
+  tags[c].classList.add('visible');
+  if(ctr) ctr.textContent=lbl[c];
+},4000);
+function toggleS(h){
+  const b=h.nextElementSibling,t=h.querySelector('.s-toggle'),open=b.classList.contains('open');
+  document.querySelectorAll('.s-body').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.s-toggle').forEach(x=>x.classList.remove('open'));
+  if(!open){b.classList.add('open');t.classList.add('open');}
+}
+function toggleMob(){
+  document.getElementById('mobileNav').classList.toggle('open');
+  document.getElementById('ham').classList.toggle('open');
+}
+function closeMob(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('ham').classList.remove('open');
+}
 </script>
 </body>
 </html>

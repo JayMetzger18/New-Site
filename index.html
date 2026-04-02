@@ -37,14 +37,15 @@
   .logo-box img { width: 100%; height: 100%; display: block; object-fit: contain; }
 
   nav { border-top: 1px solid #ccc; padding: 12px 0; }
-  nav ul { list-style: none; display: flex; flex-wrap: wrap; }
-  nav ul li { display: flex; align-items: center; }
+  nav ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; width: 100%; }
+  nav ul li { display: flex; align-items: center; flex: 1; justify-content: center; }
   nav ul li a {
     text-decoration: none;
     color: #1a1a2e;
     font-size: 13.5px;
-    padding: 0 16px;
+    padding: 0 8px;
     transition: color 0.2s;
+    white-space: nowrap;
   }
   nav ul li a:hover { color: #1a3a8f; }
   nav ul li a.active { color: #1a3a8f; text-decoration: underline; }

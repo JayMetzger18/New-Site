@@ -185,7 +185,7 @@
   /* TEAM & BOARD */
   .team-wrapper, .board-wrapper { display: flex; flex-direction: column; align-items: center; }
   .people-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 100px; }
-  .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 100px; }
+  .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 100px; }
   .person-card { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
   .person-photo-sm {
     width: 72px; height: 72px; border-radius: 50%;
@@ -219,11 +219,11 @@
     align-items: center;
   }
   .footer-mark {
-    width: 20px; height: 20px;
-    border: 1.5px solid rgba(26,58,143,0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 9px; color: rgba(26,58,143,0.35); font-weight: 600;
+    width: 40px; height: 54px;
+    cursor: pointer;
+    flex-shrink: 0;
   }
+  .footer-mark img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
 </style>
 </head>
 <body>
@@ -358,7 +358,9 @@
 
 <footer>
   <span>© 2025 2065 Capital Management. All Rights Reserved.</span>
-  <div class="footer-mark">2065</div>
+  <div class="footer-mark">
+    <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
+  </div>
 </footer>
 
 <script>

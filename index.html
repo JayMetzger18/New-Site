@@ -4,537 +4,639 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2065 Capital</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;}
-
-:root{
-  --navy:#0c1f4a;
-  --blue:#1a3a8f;
-  --mid:rgba(26,58,143,0.45);
-  --faint:rgba(26,58,143,0.06);
-  --line:rgba(26,58,143,0.1);
-  --ink:#0c1424;
-  --muted:#6b7a99;
-  --bg:#ffffff;
-  --sans:'Inter',sans-serif;
-  --mono:'DM Mono',monospace;
-}
-
+html{scroll-behavior:smooth;}
 body{
-  font-family:var(--sans);
-  background:var(--bg);
-  color:var(--ink);
-  display:flex;
-  flex-direction:column;
+  font-family:'Inter',sans-serif;
+  background:#f0f3f8;
+  color:#0c1a3a;
   min-height:100vh;
   overflow-x:hidden;
 }
 
-/* ══ BACKGROUND ══ */
-.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-
-/* Single thin vertical rule — left margin */
-.bg-rule{
-  position:absolute;
-  top:0;left:88px;
-  width:1px;height:100%;
-  background:linear-gradient(to bottom,
-    transparent 0%,
-    var(--line) 15%,
-    var(--line) 85%,
-    transparent 100%);
+:root{
+  --parchment:#f0f3f8;
+  --parchment-dark:#e8edf5;
+  --ink:#0c1a3a;
+  --ink-mid:rgba(12,26,58,0.5);
+  --ink-faint:rgba(12,26,58,0.08);
+  --gold:#1a3a8f;
+  --gold-light:#2a5fd4;
+  --gold-faint:rgba(26,58,143,0.08);
+  --line:rgba(12,26,58,0.12);
+  --mono:'DM Mono',monospace;
+  --serif:'Cormorant Garamond',serif;
 }
 
-/* Horizontal hairlines — very sparse */
-.bg-h1{position:absolute;top:0;left:0;right:0;height:1px;background:var(--line);}
-.bg-h2{
-  position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:var(--line);
+/* ── TEXTURE OVERLAY ── */
+body::after{
+  content:'';
+  position:fixed;inset:0;z-index:999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4;
 }
 
-/* Large faint number watermark */
-.bg-year{
-  position:absolute;
-  right:-20px;bottom:-40px;
-  font-family:var(--sans);
-  font-size:clamp(120px, 28vw, 380px);
-  font-weight:600;
-  color:rgba(26,58,143,0.028);
-  letter-spacing:-10px;
-  line-height:1;
-  user-select:none;
-  pointer-events:none;
-}
-
-/* ══ HEADER ══ */
+/* ── HEADER ── */
 header{
-  position:relative;z-index:10;
-  padding:32px 56px 0 56px;
-}
-.header-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  padding-bottom:20px;
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(245,242,237,0.96);
+  backdrop-filter:blur(20px);
   border-bottom:1px solid var(--line);
+  padding:0 64px;
 }
-.logo-box{width:78px;height:105px;cursor:pointer;flex-shrink:0;}
+.header-inner{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  height:96px;
+}
+.logo-box{height:80px;width:58px;cursor:pointer;flex-shrink:0;}
 .logo-box img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
 
-/* Site name beside logo */
-.site-name{
-  font-size:10px;
-  font-weight:500;
-  letter-spacing:3.5px;
-  text-transform:uppercase;
-  color:var(--muted);
-  padding-bottom:4px;
+/* Thin gold accent under header */
+header::after{
+  content:'';display:block;
+  height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);
+  opacity:0.4;
 }
 
-/* ══ NAV ══ */
-nav{padding:0;}
-nav ul{
-  list-style:none;
-  display:flex;
-  width:100%;
-  border-bottom:1px solid var(--line);
-}
-nav ul li{flex:1;display:flex;align-items:center;justify-content:center;}
+nav ul{list-style:none;display:flex;}
 nav ul li a{
-  display:block;
-  text-decoration:none;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:500;
-  letter-spacing:2.5px;
-  text-transform:uppercase;
-  padding:14px 8px;
-  transition:color 0.2s;
-  white-space:nowrap;
+  text-decoration:none;color:var(--ink-mid);
+  font-family:var(--mono);
+  font-size:9px;font-weight:400;
+  letter-spacing:2.5px;text-transform:uppercase;
+  padding:8px 20px;display:block;
+  transition:color 0.25s;white-space:nowrap;
   position:relative;
 }
 nav ul li a::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:2px;
-  background:var(--blue);
+  content:'';position:absolute;
+  bottom:-1px;left:20px;right:20px;
+  height:1px;background:var(--gold);
   transform:scaleX(0);
-  transition:transform 0.25s ease;
+  transition:transform 0.3s ease;
 }
 nav ul li a:hover{color:var(--ink);}
-nav ul li a:hover::after{transform:scaleX(1);}
-nav ul li a.active{color:var(--navy);}
-nav ul li a.active::after{transform:scaleX(1);}
+nav ul li a:hover::after,nav ul li a.active::after{transform:scaleX(1);}
+nav ul li a.active{color:var(--ink);}
 
-/* Hamburger */
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;margin-bottom:4px;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;}
 .hamburger span{display:block;width:22px;height:1px;background:var(--ink);transition:all 0.3s;}
 .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px);}
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px);}
 
-/* Mobile overlay */
 .mobile-nav{
-  display:none;position:fixed;inset:0;z-index:100;
-  background:#fff;
+  display:none;position:fixed;inset:0;top:96px;z-index:99;
+  background:var(--parchment);
   flex-direction:column;align-items:flex-start;
-  justify-content:center;
-  padding:0 56px;
-  gap:0;
+  justify-content:center;padding:0 40px;
 }
 .mobile-nav.open{display:flex;}
 .mobile-nav a{
   text-decoration:none;color:var(--ink);
-  font-size:28px;font-weight:300;
-  letter-spacing:1px;
-  padding:18px 0;
-  width:100%;
+  font-family:var(--serif);
+  font-size:32px;font-weight:300;font-style:italic;
+  padding:20px 0;width:100%;
   border-bottom:1px solid var(--line);
   transition:color 0.2s,padding-left 0.2s;
 }
 .mobile-nav a:first-of-type{border-top:1px solid var(--line);}
-.mobile-nav a:hover,.mobile-nav a.active{color:var(--blue);padding-left:12px;}
-.mob-close{
-  position:absolute;top:28px;right:40px;
-  font-size:24px;cursor:pointer;
-  color:var(--muted);font-weight:300;
-}
+.mobile-nav a:hover{color:var(--gold);padding-left:12px;}
 
-/* ══ MAIN ══ */
-main{flex:1;position:relative;z-index:1;padding:0;width:100%;}
-.page{display:none;padding:80px 56px 100px;max-width:100%;text-align:center;}
-.page.active{display:block;}
-#home.active{display:flex;}
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 1s ease,transform 1s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.15s;}
+.reveal-delay-2{transition-delay:0.3s;}
+.reveal-delay-3{transition-delay:0.45s;}
+.reveal-delay-4{transition-delay:0.6s;}
 
-/* ══ HOME ══ */
+/* ── HOME ── */
 #home{
-  min-height:76vh;
-  display:none;
-  flex-direction:column;
-  align-items:flex-start;
+  min-height:100vh;
+  padding:0 64px 0 64px;
+  display:flex;flex-direction:column;
   justify-content:center;
-  padding:80px 56px 80px 180px;
-}
-
-.home-label{
-  font-family:var(--mono);
-  font-size:9px;font-weight:300;
-  letter-spacing:4px;
-  color:var(--mid);
-  text-transform:uppercase;
-  margin-bottom:40px;
-}
-
-.tagline-wheel{
   position:relative;
-  min-height:200px;
-  max-width:680px;
-  width:100%;
+  overflow:hidden;
 }
+
+/* No watermark on home */
+#home::before{display:none;}
+
+/* Gold ornament */
+.home-ornament{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:48px;
+}
+.ornament-line{width:32px;height:1px;background:var(--gold);opacity:0.6;}
+.ornament-diamond{
+  width:5px;height:5px;background:var(--gold);
+  transform:rotate(45deg);opacity:0.7;
+}
+
+.home-eyebrow{
+  font-family:var(--mono);font-size:9px;font-weight:300;
+  letter-spacing:4px;color:var(--gold);text-transform:uppercase;
+  margin-bottom:40px;opacity:0.8;
+}
+
+.tagline-wheel{position:relative;min-height:260px;max-width:860px;margin-bottom:64px;}
 .tagline{
   position:absolute;top:0;left:0;
-  font-size:38px;
-  font-weight:200;
-  color:var(--navy);
-  line-height:1.45;
-  opacity:0;
-  transition:opacity 1.2s ease;
-  pointer-events:none;
-  text-align:left;
-  letter-spacing:-0.5px;
+  font-family:var(--serif);
+  font-size:clamp(38px,5vw,72px);
+  font-weight:300;font-style:italic;
+  color:var(--ink);
+  line-height:1.25;opacity:0;
+  transition:opacity 1.4s ease;
+  pointer-events:none;letter-spacing:-0.5px;
 }
 .tagline.visible{opacity:1;}
 
-.home-meta{
-  margin-top:52px;
-  display:flex;
-  align-items:center;
-  gap:28px;
+.home-footer-row{
+  display:flex;align-items:center;gap:48px;
 }
 .home-counter{
-  font-family:var(--mono);
-  font-size:9px;font-weight:300;
-  letter-spacing:3px;
-  color:var(--mid);
+  font-family:var(--mono);font-size:9px;font-weight:300;
+  letter-spacing:3px;color:var(--ink-mid);
 }
-.home-line{
-  width:48px;height:1px;
-  background:var(--mid);
-}
-.home-year{
-  font-family:var(--mono);
-  font-size:9px;font-weight:300;
-  letter-spacing:3px;
-  color:var(--mid);
+.home-divider{width:1px;height:28px;background:var(--line);}
+.home-est{
+  font-family:var(--mono);font-size:9px;font-weight:300;
+  letter-spacing:3px;color:var(--ink-mid);text-transform:uppercase;
 }
 
-/* ══ INNER PAGES ══ */
-.inner{
-  max-width:780px;
-  margin:0 auto;
+/* ── ABOUT ── */
+#about{
+  min-height:100vh;
+  padding:140px 64px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0 100px;align-items:center;
+  border-top:1px solid var(--line);
+  background:var(--parchment);
+  position:relative;
+}
+.about-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);opacity:0.8;
+  margin-bottom:36px;display:block;
+}
+.about-pull{
+  font-family:var(--serif);
+  font-size:clamp(32px,3.5vw,52px);
+  font-weight:300;font-style:italic;
+  color:var(--ink);line-height:1.3;
+  margin-bottom:52px;
+}
+.about-stats{
+  display:flex;gap:48px;
+  padding-top:40px;
+  border-top:1px solid var(--line);
+}
+.stat-num{
+  font-family:var(--serif);
+  font-size:42px;font-weight:300;
+  color:var(--gold);line-height:1;margin-bottom:8px;
+}
+.stat-label{
+  font-family:var(--mono);font-size:8px;font-weight:300;
+  color:var(--ink-mid);letter-spacing:2px;text-transform:uppercase;
+}
+.about-right p{
+  font-size:16px;font-weight:300;line-height:2.1;
+  color:rgba(26,22,16,0.75);
 }
 
-.eyebrow{
-  font-family:var(--mono);
-  font-size:9px;font-weight:400;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  color:var(--mid);
-  margin-bottom:48px;
+/* ── STRATEGIES ── */
+#strategies{
+  min-height:100vh;
+  padding:140px 0;
+  border-top:1px solid var(--line);
+  background:var(--parchment-dark);
 }
-
-/* ══ ABOUT ══ */
-#about p{
-  font-size:17px;
-  font-weight:300;
-  line-height:2;
-  color:var(--ink);
-  text-align:left;
+.strat-top{
+  padding:0 64px;margin-bottom:72px;
+  display:flex;align-items:flex-end;justify-content:space-between;
 }
-#about .inner{text-align:left;}
-
-/* ══ STRATEGIES ══ */
-.s-list{text-align:left;}
-.s-item{border-top:1px solid var(--line);position:relative;}
+.strat-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);opacity:0.8;
+}
+.s-item{
+  border-top:1px solid var(--line);
+  position:relative;transition:background 0.4s;
+}
 .s-item:last-child{border-bottom:1px solid var(--line);}
+.s-item:hover{background:var(--gold-faint);}
 .s-head{
   display:flex;justify-content:space-between;align-items:center;
-  padding:28px 0;cursor:pointer;user-select:none;
-  transition:padding-left 0.2s;
+  padding:36px 64px;cursor:pointer;user-select:none;
 }
-.s-head:hover{padding-left:8px;}
-.s-left{display:flex;align-items:baseline;gap:24px;}
+.s-left{display:flex;align-items:center;gap:36px;}
 .s-n{
-  font-family:var(--mono);font-size:9px;font-weight:300;
-  color:var(--mid);letter-spacing:1px;
+  font-family:var(--mono);font-size:9px;
+  color:var(--gold);opacity:0.6;letter-spacing:1px;
 }
 .s-head h3{
-  font-size:15px;font-weight:500;
-  color:var(--navy);letter-spacing:0.3px;
+  font-family:var(--serif);
+  font-size:clamp(20px,2.2vw,30px);
+  font-weight:300;font-style:italic;
+  color:var(--ink);transition:color 0.2s;
 }
-.s-head:hover h3{color:var(--blue);}
+.s-item:hover .s-head h3{color:var(--gold);}
 .s-toggle{
-  font-family:var(--mono);font-size:20px;font-weight:200;
-  color:var(--mid);transition:transform 0.35s;flex-shrink:0;
-  line-height:1;
+  font-family:var(--serif);font-size:24px;font-weight:300;
+  color:var(--gold);opacity:0.6;
+  transition:transform 0.35s,opacity 0.2s;flex-shrink:0;line-height:1;
 }
-.s-toggle.open{transform:rotate(45deg);}
+.s-toggle.open{transform:rotate(45deg);opacity:1;}
 .s-body{
   max-height:0;overflow:hidden;
-  transition:max-height 0.4s ease,padding 0.2s;
-  font-size:14px;font-weight:300;
-  color:var(--muted);line-height:1.9;
+  transition:max-height 0.5s ease,padding 0.3s;
+  font-size:15px;font-weight:300;
+  color:rgba(26,22,16,0.6);line-height:2;
 }
-.s-body.open{max-height:300px;padding-bottom:28px;}
+.s-body.open{max-height:200px;padding:0 64px 40px calc(64px + 36px + 2ch + 36px);}
 
-/* ══ PEOPLE ══ */
-.p-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:60px 80px;
+/* ── QUOTE BAND ── */
+.quote-band{
+  padding:120px 160px;
+  background:var(--ink);
   text-align:center;
+  position:relative;overflow:hidden;
+  border-top:1px solid rgba(255,255,255,0.05);
 }
-.p-card{display:flex;flex-direction:column;align-items:center;gap:16px;}
-.p-img{
-  width:80px;height:80px;border-radius:2px;
-  background:linear-gradient(160deg,#e8eef7,#d2ddef);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:8px;
-  color:var(--mid);letter-spacing:1px;
+.quote-band-text{
+  font-family:var(--serif);
+  font-size:clamp(22px,3vw,42px);
+  font-weight:300;font-style:italic;
+  color:rgba(245,242,237,0.9);
+  line-height:1.6;
+  position:relative;z-index:1;
 }
-.p-card h3{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:2px;}
-.p-card p{
-  font-family:var(--mono);font-size:8.5px;font-weight:400;
-  color:var(--mid);letter-spacing:2.5px;text-transform:uppercase;
+.quote-band-text em{font-style:normal;color:var(--gold-light);}
+.quote-rule{
+  width:40px;height:1px;background:var(--gold);
+  margin:40px auto 0;opacity:0.5;
 }
 
-/* ══ CONTACT ══ */
-.c-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:52px 80px;text-align:left;
+/* ── PEOPLE ── */
+#team,#board{
+  min-height:100vh;
+  padding:140px 64px;
+  border-top:1px solid var(--line);
 }
+#board{background:var(--parchment-dark);}
+
+.section-eyebrow{
+  font-family:var(--mono);font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);
+  opacity:0.8;margin-bottom:72px;display:block;
+}
+.p-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0 40px;}
+.b-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 40px;}
+.p-card{display:flex;flex-direction:column;gap:20px;}
+.p-img{
+  width:100%;aspect-ratio:2/3;
+  background:linear-gradient(160deg,var(--parchment-dark),#ddd8cf);
+  border:1px solid var(--line);
+  display:flex;align-items:flex-end;padding:14px;
+  font-family:var(--mono);font-size:8px;
+  color:var(--ink-mid);letter-spacing:1px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s;
+}
+.p-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 60%,rgba(245,242,237,0.6));
+}
+.p-card:hover .p-img{border-color:var(--gold);}
+.p-card h3{
+  font-family:var(--serif);
+  font-size:18px;font-weight:400;
+  color:var(--ink);margin-bottom:4px;letter-spacing:0.2px;
+}
+.p-card p{
+  font-family:var(--mono);font-size:8px;
+  color:var(--gold);letter-spacing:2.5px;
+  text-transform:uppercase;opacity:0.8;
+}
+
+/* ── CONTACT ── */
+#contact{
+  padding:140px 64px 100px;
+  border-top:1px solid var(--line);
+  min-height:auto;
+}
+.c-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0 40px;}
 .c-block h3{
-  font-family:var(--mono);font-size:8px;font-weight:400;
+  font-family:var(--mono);font-size:8px;
   text-transform:uppercase;letter-spacing:2.5px;
-  color:var(--mid);margin-bottom:12px;
+  color:var(--gold);opacity:0.7;margin-bottom:16px;
 }
 .c-block p,.c-block a{
-  font-size:15px;font-weight:300;
-  color:var(--navy);text-decoration:none;display:block;
+  font-family:var(--serif);
+  font-size:18px;font-weight:300;
+  color:var(--ink);text-decoration:none;
+  line-height:1.7;display:block;
+  transition:color 0.2s;
 }
-.c-block a:hover{color:var(--blue);}
+.c-block a:hover{color:var(--gold);}
 
-/* ══ FOOTER ══ */
+/* ── FOOTER ── */
 footer{
-  position:relative;z-index:10;
   border-top:1px solid var(--line);
-  padding:20px 56px;
+  padding:24px 64px;
   display:flex;justify-content:space-between;align-items:center;
-  flex-shrink:0;
+  background:var(--parchment);
+}
+footer::before{
+  content:'';position:absolute;left:0;right:0;top:0;
+  height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  opacity:0.3;
 }
 .f-copy{
   font-family:var(--mono);font-size:9px;font-weight:300;
-  color:rgba(26,58,143,0.28);letter-spacing:1px;
+  color:var(--ink-mid);letter-spacing:1px;
 }
-.f-logo{width:36px;height:48px;cursor:pointer;}
+.f-logo{width:44px;height:60px;cursor:pointer;}
 .f-logo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
 
-/* ══ MOBILE ══ */
+/* ── MOBILE ── */
 @media(max-width:768px){
-  header{padding:20px 24px 0;}
-  .header-top{padding-bottom:16px;}
-  .logo-box{width:60px;height:81px;}
-  .site-name{display:none;}
+  header{padding:0 24px;}
+  .header-inner{height:76px;}
+  .logo-box{height:60px;width:44px;}
   nav{display:none;}
   .hamburger{display:flex;}
-  main{padding:0;}
-  .page{padding:60px 24px 80px;}
-  #home{padding:60px 24px;min-height:70vh;align-items:flex-start;}
-  .tagline{font-size:26px;}
-  .tagline-wheel{min-height:220px;}
-  .p-grid{grid-template-columns:1fr;gap:40px;}
-  .c-grid{grid-template-columns:1fr;gap:36px;}
-  #about p{font-size:15px;}
+  .mobile-nav{top:76px;}
+
+  #home{padding:100px 24px 60px;}
+  #home::before{font-size:clamp(100px,40vw,180px);}
+  .tagline{font-size:clamp(32px,9vw,48px);}
+  .tagline-wheel{min-height:280px;}
+
+  #about{grid-template-columns:1fr;gap:48px;padding:80px 24px;}
+  .about-stats{gap:32px;}
+
+  #strategies{padding:80px 0;}
+  .strat-top{padding:0 24px;margin-bottom:40px;}
+  .s-head{padding:24px 24px;}
+  .s-body.open{padding:0 24px 28px 24px;}
+
+  .quote-band{padding:72px 24px;}
+  .quote-band::before{font-size:180px;top:-20px;left:10px;}
+
+  #team,#board{padding:80px 24px;}
+  .p-grid{grid-template-columns:1fr 1fr;gap:28px 16px;}
+  .b-grid{grid-template-columns:1fr 1fr;gap:28px 16px;}
+  .c-grid{grid-template-columns:1fr 1fr;gap:32px 16px;}
+  #contact{padding:80px 24px 60px;}
   footer{padding:16px 24px;}
-  .mobile-nav{padding:0 24px;}
-  .mobile-nav a{font-size:22px;padding:16px 0;}
+}
+@media(max-width:400px){
+  .tagline{font-size:28px;}
+  .p-grid,.b-grid{grid-template-columns:1fr 1fr;}
+  .c-grid{grid-template-columns:1fr;gap:28px;}
 }
 </style>
 </head>
 <body>
 
-<div class="bg">
-  <div class="bg-rule"></div>
-  <div class="bg-h1"></div>
-  <div class="bg-h2"></div>
-  <div class="bg-year">2065</div>
-</div>
-
 <div class="mobile-nav" id="mobileNav">
-  <span class="mob-close" onclick="closeMob()">×</span>
-  <a href="#" onclick="go('home',this);closeMob();return false;">Home</a>
-  <a href="#" onclick="go('about',this);closeMob();return false;">About Us</a>
-  <a href="#" onclick="go('strategies',this);closeMob();return false;">Strategies</a>
-  <a href="#" onclick="go('team',this);closeMob();return false;">Team</a>
-  <a href="#" onclick="go('board',this);closeMob();return false;">Board of Directors</a>
-  <a href="#" onclick="go('contact',this);closeMob();return false;">Contact Us</a>
+  <a href="#home" onclick="closeMob()">Home</a>
+  <a href="#about" onclick="closeMob()">About Us</a>
+  <a href="#strategies" onclick="closeMob()">Strategies</a>
+  <a href="#team" onclick="closeMob()">Team</a>
+  <a href="#board" onclick="closeMob()">Board of Directors</a>
+  <a href="#contact" onclick="closeMob()">Contact Us</a>
 </div>
 
 <header>
-  <div class="header-top">
-    <div class="logo-box" onclick="go('home',document.querySelector('nav a'))">
+  <div class="header-inner">
+    <div class="logo-box" onclick="scrollTo({top:0,behavior:'smooth'})">
       <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
     </div>
-
+    <nav>
+      <ul>
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#strategies">Strategies</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#board">Board of Directors</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </nav>
     <div class="hamburger" id="ham" onclick="toggleMob()">
       <span></span><span></span><span></span>
     </div>
   </div>
-  <nav>
-    <ul>
-      <li><a href="#" class="active" onclick="go('home',this);return false;">Home</a></li>
-      <li><a href="#" onclick="go('about',this);return false;">About Us</a></li>
-      <li><a href="#" onclick="go('strategies',this);return false;">Strategies</a></li>
-      <li><a href="#" onclick="go('team',this);return false;">Team</a></li>
-      <li><a href="#" onclick="go('board',this);return false;">Board of Directors</a></li>
-      <li><a href="#" onclick="go('contact',this);return false;">Contact Us</a></li>
-    </ul>
-  </nav>
 </header>
 
-<main>
+<!-- HOME -->
+<section id="home">
+  <div class="home-ornament reveal">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-line"></div>
+  </div>
+  <div class="home-eyebrow reveal">Long-Duration Structured Capital Solutions</div>
+  <div class="tagline-wheel reveal reveal-delay-1">
+    <div class="tagline visible">We go where conventional debt and equity cannot.</div>
+    <div class="tagline">Alignment and mutual trust support durable results in complex structures.</div>
+    <div class="tagline">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
+  </div>
+  <div class="home-footer-row reveal reveal-delay-2">
+    <span class="home-counter" id="ctr">01 / 03</span>
+    <div class="home-divider"></div>
+    <span class="home-est">Est. 2025 · Chicago</span>
+  </div>
+</section>
 
-  <div id="home" class="page active">
-    <div class="home-label">Long-Duration Structured Capital Solutions</div>
-    <div class="tagline-wheel">
-      <div class="tagline visible">We go where conventional debt and equity cannot.</div>
-      <div class="tagline">Alignment and mutual trust support durable results in complex structures.</div>
-      <div class="tagline">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
-    </div>
-    <div class="home-meta">
-      <span class="home-counter" id="ctr">01 / 03</span>
-      <div class="home-line"></div>
-      <span class="home-year">EST. 2025 · CHICAGO</span>
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left reveal">
+    <span class="about-eyebrow">About Us</span>
+    <div class="about-pull">Investing in dislocation.</div>
+    <div class="about-stats">
+      <div><div class="stat-num" id="countYears">0</div><div class="stat-label">Year Track Record</div></div>
+      <div><div class="stat-num" id="countHorizon">0</div><div class="stat-label">Year Horizon</div></div>
+      <div><div class="stat-num">2025</div><div class="stat-label">Est. Chicago</div></div>
     </div>
   </div>
-
-  <div id="about" class="page">
-    <div class="inner">
-      <div class="eyebrow">About Us</div>
-      <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
-    </div>
+  <div class="about-right reveal reveal-delay-1">
+    <p>2065 Capital provides long-duration, flexible capital in between traditional debt and common equity. With a 12-year track record within The Pritzker Organization, the firm was established as a separate business in 2025 to continue managing its existing portfolio and to support growth. The firm pursues a hybrid strategy across industries and asset classes, partnering with management teams and sponsors to structure durable, aligned investments designed to compound after-tax value over a generational horizon.</p>
   </div>
+</section>
 
-  <div id="strategies" class="page">
-    <div class="inner">
-      <div class="eyebrow">Strategies</div>
-      <div class="s-list">
-        <div class="s-item">
-          <div class="s-head" onclick="toggleS(this)">
-            <div class="s-left"><span class="s-n">01</span><h3>Preferred Equity</h3></div>
-            <span class="s-toggle">+</span>
-          </div>
-          <div class="s-body">Businesses where we have high conviction on baseline performance and a significant margin of error in our underwriting due to structure and pricing.</div>
-        </div>
-        <div class="s-item">
-          <div class="s-head" onclick="toggleS(this)">
-            <div class="s-left"><span class="s-n">02</span><h3>Insurance Strategies</h3></div>
-            <span class="s-toggle">+</span>
-          </div>
-          <div class="s-body">High quality credit portfolios with reinsurance float providing cheap long duration financing.</div>
-        </div>
-        <div class="s-item">
-          <div class="s-head" onclick="toggleS(this)">
-            <div class="s-left"><span class="s-n">03</span><h3>Leveraged Vehicles</h3></div>
-            <span class="s-toggle">+</span>
-          </div>
-          <div class="s-body">High quality underlying credit exposures with attractive sources of cheap long duration leverage.</div>
-        </div>
+<!-- STRATEGIES -->
+<section id="strategies">
+  <div class="strat-top reveal">
+    <span class="strat-eyebrow">Strategies</span>
+  </div>
+  <div class="s-list">
+    <div class="s-item reveal">
+      <div class="s-head" onclick="toggleS(this)">
+        <div class="s-left"><span class="s-n">01</span><h3>Preferred Equity</h3></div>
+        <span class="s-toggle">+</span>
       </div>
+      <div class="s-body">Businesses where we have high conviction on baseline performance and a significant margin of error in our underwriting due to structure and pricing.</div>
     </div>
-  </div>
-
-  <div id="team" class="page">
-    <div class="inner">
-      <div class="eyebrow">Team</div>
-      <div class="p-grid">
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Jason Sussman</h3><p>CEO</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Heather Ryan</h3><p>Chief of Staff</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Nick Peluchiwski</h3><p>Associate</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Jay Metzger</h3><p>Analyst</p></div></div>
+    <div class="s-item reveal reveal-delay-1">
+      <div class="s-head" onclick="toggleS(this)">
+        <div class="s-left"><span class="s-n">02</span><h3>Insurance Strategies</h3></div>
+        <span class="s-toggle">+</span>
       </div>
+      <div class="s-body">High quality credit portfolios with reinsurance float providing cheap long duration financing.</div>
     </div>
-  </div>
-
-  <div id="board" class="page">
-    <div class="inner">
-      <div class="eyebrow">Board of Directors</div>
-      <div class="p-grid">
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
-        <div class="p-card"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="s-item reveal reveal-delay-2">
+      <div class="s-head" onclick="toggleS(this)">
+        <div class="s-left"><span class="s-n">03</span><h3>Leveraged Vehicles</h3></div>
+        <span class="s-toggle">+</span>
       </div>
+      <div class="s-body">High quality underlying credit exposures with attractive sources of cheap long duration leverage.</div>
     </div>
   </div>
+</section>
 
-  <div id="contact" class="page">
-    <div class="inner">
-      <div class="eyebrow">Contact Us</div>
-      <div class="c-grid">
-        <div class="c-block"><h3>Email</h3><a href="mailto:info@2065capital.com">info@2065capital.com</a></div>
-        <div class="c-block"><h3>Phone</h3><p>+1 (000) 000-0000</p></div>
-        <div class="c-block"><h3>Office</h3><p>Chicago, IL</p></div>
-        <div class="c-block"><h3>LinkedIn</h3><a href="#">2065 Capital Management</a></div>
-      </div>
-    </div>
+<!-- QUOTE -->
+<div class="quote-band reveal">
+  <div class="quote-band-text">
+    2065, born in 2025, reflects a generational horizon — an ambition to <em>compound after-tax value</em> over the next 40 years.
   </div>
+  <div class="quote-rule"></div>
+</div>
 
-</main>
+<!-- TEAM -->
+<section id="team">
+  <span class="section-eyebrow reveal">Team</span>
+  <div class="p-grid">
+    <div class="p-card reveal"><div class="p-img">Photo</div><div><h3>Jason Sussman</h3><p>CEO</p></div></div>
+    <div class="p-card reveal reveal-delay-1"><div class="p-img">Photo</div><div><h3>Heather Ryan</h3><p>Chief of Staff</p></div></div>
+    <div class="p-card reveal reveal-delay-2"><div class="p-img">Photo</div><div><h3>Nick Peluchiwski</h3><p>Associate</p></div></div>
+    <div class="p-card reveal reveal-delay-3"><div class="p-img">Photo</div><div><h3>Jay Metzger</h3><p>Analyst</p></div></div>
+  </div>
+</section>
+
+<!-- BOARD -->
+<section id="board">
+  <span class="section-eyebrow reveal">Board of Directors</span>
+  <div class="b-grid">
+    <div class="p-card reveal"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="p-card reveal reveal-delay-1"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="p-card reveal reveal-delay-2"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="p-card reveal reveal-delay-1"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="p-card reveal reveal-delay-2"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+    <div class="p-card reveal reveal-delay-3"><div class="p-img">Photo</div><div><h3>Name</h3><p>Title</p></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <span class="section-eyebrow reveal">Contact Us</span>
+  <div class="c-grid">
+    <div class="c-block reveal"><h3>Email</h3><a href="mailto:info@2065capital.com">info@2065capital.com</a></div>
+    <div class="c-block reveal reveal-delay-1"><h3>Phone</h3><p>+1 (000) 000-0000</p></div>
+    <div class="c-block reveal reveal-delay-2"><h3>Office</h3><p>150 N. Riverside Plaza<br>Suite 3200<br>Chicago, IL 60606</p></div>
+    <div class="c-block reveal reveal-delay-3"><h3>LinkedIn</h3><a href="https://www.linkedin.com/company/2065capital" target="_blank">2065 Capital</a></div>
+  </div>
+</section>
 
 <footer>
-  <span class="f-copy">© 2025 2065 Capital Management — All Rights Reserved</span>
-  <div class="f-logo" onclick="go('home',document.querySelector('nav a'))">
+  <span class="f-copy">© 2026 2065 Capital Management — All Rights Reserved</span>
+  <div class="f-logo" onclick="scrollTo({top:0,behavior:'smooth'})">
     <img src="2065 Capital Logo_RGB.png" alt="2065 Capital">
   </div>
 </footer>
 
 <script>
-function go(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('nav a,.mobile-nav a').forEach(a=>a.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(el) el.classList.add('active');
-}
-const tags=document.querySelectorAll('.tagline');
-const ctr=document.getElementById('ctr');
-const lbl=['01 / 03','02 / 03','03 / 03'];
-let c=0;
-setInterval(()=>{
-  tags[c].classList.remove('visible');
-  c=(c+1)%tags.length;
-  tags[c].classList.add('visible');
-  if(ctr) ctr.textContent=lbl[c];
-},4000);
-function toggleS(h){
-  const b=h.nextElementSibling,t=h.querySelector('.s-toggle'),open=b.classList.contains('open');
-  document.querySelectorAll('.s-body').forEach(x=>x.classList.remove('open'));
-  document.querySelectorAll('.s-toggle').forEach(x=>x.classList.remove('open'));
-  if(!open){b.classList.add('open');t.classList.add('open');}
-}
-function toggleMob(){
-  document.getElementById('mobileNav').classList.toggle('open');
-  document.getElementById('ham').classList.toggle('open');
-}
-function closeMob(){
-  document.getElementById('mobileNav').classList.remove('open');
-  document.getElementById('ham').classList.remove('open');
-}
+window.addEventListener('load', function(){
+
+  // Reveal — fires every time
+  var reveals = document.querySelectorAll('.reveal');
+  var ro = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('visible');
+      else e.target.classList.remove('visible');
+    });
+  },{threshold:0.12});
+  reveals.forEach(function(el){ ro.observe(el); });
+
+  // Active nav
+  var secs = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('nav a');
+  var so = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        navLinks.forEach(function(a){ a.classList.remove('active'); });
+        var a = document.querySelector('nav a[href="#'+e.target.id+'"]');
+        if(a) a.classList.add('active');
+      }
+    });
+  },{threshold:0.3});
+  secs.forEach(function(s){ so.observe(s); });
+
+  // Count up on about scroll
+  function countUp(el, target, duration){
+    if(!el) return;
+    var start = 0, step = target / (duration / 16);
+    var timer = setInterval(function(){
+      start += step;
+      if(start >= target){ start = target; clearInterval(timer); }
+      el.textContent = Math.floor(start);
+    }, 16);
+  }
+  var counted = false;
+  var aboutObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !counted){
+        counted = true;
+        countUp(document.getElementById('countYears'), 12, 1200);
+        countUp(document.getElementById('countHorizon'), 40, 1600);
+      }
+    });
+  },{threshold:0.3});
+  var ab = document.getElementById('about');
+  if(ab) aboutObs.observe(ab);
+
+  // Tagline
+  var tags = document.querySelectorAll('.tagline');
+  var ctr = document.getElementById('ctr');
+  var lbl = ['01 / 03','02 / 03','03 / 03'];
+  var c = 0;
+  setInterval(function(){
+    tags[c].classList.remove('visible');
+    c = (c+1) % tags.length;
+    tags[c].classList.add('visible');
+    if(ctr) ctr.textContent = lbl[c];
+  }, 4200);
+
+  // Strategy accordion
+  window.toggleS = function(h){
+    var b = h.nextElementSibling, t = h.querySelector('.s-toggle');
+    var open = b.classList.contains('open');
+    document.querySelectorAll('.s-body').forEach(function(x){ x.classList.remove('open'); });
+    document.querySelectorAll('.s-toggle').forEach(function(x){ x.classList.remove('open'); });
+    if(!open){ b.classList.add('open'); t.classList.add('open'); }
+  };
+
+  // Mobile
+  window.toggleMob = function(){
+    document.getElementById('mobileNav').classList.toggle('open');
+    document.getElementById('ham').classList.toggle('open');
+  };
+  window.closeMob = function(){
+    var mn = document.getElementById('mobileNav'), h = document.getElementById('ham');
+    if(mn) mn.classList.remove('open');
+    if(h) h.classList.remove('open');
+  };
+
+});
 </script>
 </body>
 </html>

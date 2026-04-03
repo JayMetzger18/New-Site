@@ -117,9 +117,9 @@ nav ul li a.active{color:var(--ink);}
 /* ── HOME ── */
 #home{
   min-height:100vh;
-  padding:0 64px 0 64px;
+  padding:120px 64px 80px;
   display:flex;flex-direction:column;
-  justify-content:center;
+  justify-content:flex-start;
   position:relative;
   overflow:hidden;
 }
@@ -144,7 +144,7 @@ nav ul li a.active{color:var(--ink);}
   margin-bottom:40px;opacity:0.8;
 }
 
-.tagline-wheel{position:relative;min-height:260px;max-width:860px;margin-bottom:64px;}
+.tagline-wheel{position:relative;min-height:260px;max-width:860px;margin-bottom:48px;}
 .tagline{
   position:absolute;top:0;left:0;
   font-family:var(--serif);
@@ -440,21 +440,19 @@ footer::before{
 
 <!-- HOME -->
 <section id="home">
-  <div class="home-ornament reveal">
-    <div class="ornament-line"></div>
-    <div class="ornament-diamond"></div>
-    <div class="ornament-line"></div>
-  </div>
   <div class="home-eyebrow reveal">Long-Duration Structured Capital Solutions</div>
   <div class="tagline-wheel reveal reveal-delay-1">
     <div class="tagline visible">We go where conventional debt and equity cannot.</div>
     <div class="tagline">Alignment and mutual trust support durable results in complex structures.</div>
     <div class="tagline">Our capabilities are sophisticated, but our philosophy is simple: long-term success requires long-term partnerships.</div>
   </div>
-  <div class="home-footer-row reveal reveal-delay-2">
+  <div class="home-ornament reveal reveal-delay-2">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-line"></div>
+  </div>
+  <div class="home-footer-row reveal reveal-delay-3">
     <span class="home-counter" id="ctr">01 / 03</span>
-    <div class="home-divider"></div>
-    <span class="home-est">Est. 2025 · Chicago</span>
   </div>
 </section>
 
